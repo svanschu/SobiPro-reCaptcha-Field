@@ -32,11 +32,11 @@ class SPField_reCaptcha extends SPField_Inbox implements SPFieldInterface
 	/**
 	 * @var string
 	 */
-	protected $form_type = "Ajax";
+	protected $recaptcha_template = 'clean';
 	/**
-	 * @var string
+	 * @var bool
 	 */
-	protected $recaptcha_template = "white";
+	protected $ssl = 0;
 
 	/**
 	* Returns the parameter list
@@ -53,10 +53,6 @@ class SPField_reCaptcha extends SPField_Inbox implements SPFieldInterface
 	public function __construct ( &$field )
 	{
 		parent::__construct ($field);
-
-		/*SPLang::load( 'SpApp.recaptcha' );
-		if (strlen($this->atText) == 0)
-			$this->atText = Sobi::Txt( 'AFA_ADD_NEW');*/
 	}
 
 	/**
@@ -69,8 +65,13 @@ class SPField_reCaptcha extends SPField_Inbox implements SPFieldInterface
 		if (!($this->enabled)) {
 			return false;
 		}
-		require_once(JPATH_COMPONENT.'lib/recaptcha/recaptchalib.php');
-		$captcha = recaptcha_get_html($this->public_key);
+		$lang = JFactory::getLanguage()->getlocale();
+		SPFactory::header()->addJsCode( "var RecaptchaOptions = {
+		    theme : '{$this->recaptcha_template}',
+		    lang : '{$lang[4]}'
+		 };" );
+		require_once(JPATH_COMPONENT.'/lib/recaptcha/recaptcha.php');
+		$captcha = recaptcha_get_html($this->public_key, null, $this->ssl);
 		if (!$return) {
 			echo $captcha;
 		}

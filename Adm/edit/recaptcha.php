@@ -38,18 +38,21 @@ defined( 'SOBIPRO' ) || exit( 'Restricted access' );
 			</tr>
 			<tr class="row<?php echo ++$row%2; ?>">
 				<td class="key">
-					<?php $this->txt( 'SW_RECAPTCHA_TYPE' ); ?>
+					<?php $this->txt( 'SW_RECAPTCHA_TEMPLATE' ); ?>
 				</td>
 				<td>
-					<?php $this->field( 'select', 'form_type', 'Iframe, AJAX', 1, false, array( 'size' => 1, 'class' => 'inputbox') ); ?>
+					<?php $this->field( 'select', 'field.recaptcha_template',
+						array( 'red' => 'red', 'white' => 'white', 'blackglass' => 'blackglass', 'clean' => 'clean'),
+						'value:field.recaptcha_template', false, array( 'id' => 'recaptcha_template', 'size' => 1,
+						'class' => 'inputbox' ) ); ?>
 				</td>
 			</tr>
 			<tr class="row<?php echo ++$row%2; ?>">
 				<td class="key">
-					<?php $this->txt( 'SW_RECAPTCHA_template' ); ?>
+					<?php $this->txt( 'SW_RECAPTCHA_SSL' ); ?>
 				</td>
 				<td>
-					<?php $this->field( 'select', 'recaptcha_template', 'red, white, black, clean', 1, false, array( 'size' => 1, 'class' => 'inputbox' ) ); ?>
+					<?php $this->field( 'states', 'field.ssl', 'value:field.ssl', 'ssl', 'yes_no', 'class=inputbox' ); ?>
 				</td>
 			</tr>
 		</table>
