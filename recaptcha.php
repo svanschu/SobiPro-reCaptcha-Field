@@ -79,4 +79,29 @@ class SPField_reCaptcha extends SPField_Inbox implements SPFieldInterface
 			return $captcha;
 		}
 	}
+
+	/**
+		 * Gets the data for a field, verify it and pre-save it.
+		 * @param SPEntry $entry
+		 * @param string $tsid
+		 * @param string $request
+		 * @return void
+		 */
+		public function submit( &$entry, $tsid = null, $request = 'POST' )
+		{
+			$data = SPRequest::string( "recaptcha_response_field" , null, false, $request );
+			if ( !( strlen( $data ) ) ) {
+				throw new SPException( SPLang::e( 'FIELD_REQUIRED_ERR', $this->name ) );
+			}
+			require_once(JPATH_COMPONENT.'/lib/recaptcha/recaptcha.php');
+			$resp = recaptcha_check_answer ($this->private_key,
+					SPRequest::string( "REMOTE_ADDR", null, false, 'SERVER' ),
+					SPRequest::string( "recaptcha_challenge_field" , null, false, $request ),
+					$data);
+
+			if (!$resp->is_valid) {
+				// What happens when the CAPTCHA was entered incorrectly
+				throw new SPException( SPLang::e( 'FIELD_RECAPTCHA_ERR', $resp->error ) );
+			}
+		}
 }
