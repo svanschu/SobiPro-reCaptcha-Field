@@ -6,7 +6,7 @@
   <authorName>Schultschik Websolution</authorName>
   <authorEmail>admin@schultschik.de</authorEmail>
   <authorUrl>http://www.schultschik.de/</authorUrl>
-  <copyright>Copyright (C) 2011 Schultschik Websolution</copyright>
+  <copyright>Copyright (C) 2011-2012 Schultschik Websolution</copyright>
   <license>GNU General Public License v3</license>
   <creationDate>2011-12-15</creationDate>
   <fieldType typeId="recaptcha" fieldGroup="special">reCaptcha</fieldType>
