@@ -13,6 +13,7 @@
  * You can use, redistribute this file and/or modify it under the terms of the GNU General Public License version 3
  */
 defined( 'SOBIPRO' ) || exit( 'Restricted access' );
+SPLang::load( 'SpApp.recaptcha' );
 ?>
 <div class="col width-70" style="float: left;">
 	<fieldset class="adminform" style="border: 1px dashed silver;">
