@@ -70,6 +70,12 @@ class SPField_reCaptcha extends SPField_Inbox implements SPFieldInterface
 		    theme : '{$this->recaptcha_template}',
 		    lang : '{$lang[4]}'
 		 };" );
+		SPFactory::header()->addJsFile( 'jquery' );
+		SPFactory::header()->addJsCode( "jQuery( document ).ready( function() {
+			jQuery( '#recaptcha_response_field' )
+				.addClass( ' required' )
+			 	.css('border' , '')
+		});");
 		require_once(JPATH_COMPONENT.'/lib/recaptcha/recaptcha.php');
 		$captcha = recaptcha_get_html($this->public_key, null, $this->ssl);
 		if (!$return) {
