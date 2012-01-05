@@ -10,7 +10,7 @@
   <license>GNU General Public License v3</license>
   <creationDate>2011-12-15</creationDate>
   <fieldType typeId="recaptcha" fieldGroup="special">reCaptcha</fieldType>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <description>reCaptchaLib used from http://recaptcha.net</description>
   <language>
   	<file lang="en_GB">en-GB.SpApp.recaptcha.ini</file>
