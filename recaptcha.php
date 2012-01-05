@@ -95,9 +95,10 @@ class SPField_reCaptcha extends SPField_Inbox implements SPFieldInterface
 		 */
 		public function submit( &$entry, $tsid = null, $request = 'POST' )
 		{
+			SPLang::load( 'SpApp.recaptcha' );
 			$data = SPRequest::string( "recaptcha_response_field" , null, false, $request );
 			if ( !( strlen( $data ) ) ) {
-				throw new SPException( SPLang::e( 'FIELD_REQUIRED_ERR', $this->name ) );
+				throw new SPException( SPLang::e( 'SW_FIELD_REQUIRED_ERR', $this->name ) );
 			}
 			require_once(JPATH_COMPONENT.'/lib/recaptcha/recaptcha.php');
 			$resp = recaptcha_check_answer ($this->private_key,
@@ -107,7 +108,7 @@ class SPField_reCaptcha extends SPField_Inbox implements SPFieldInterface
 
 			if (!$resp->is_valid) {
 				// What happens when the CAPTCHA was entered incorrectly
-				throw new SPException( SPLang::e( 'FIELD_RECAPTCHA_ERR', $resp->error ) );
+				throw new SPException( SPLang::e( 'SW_FIELD_RECAPTCHA_ERR', $resp->error ) );
 			}
 		}
 }
