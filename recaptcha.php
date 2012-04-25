@@ -65,19 +65,23 @@ class SPField_reCaptcha extends SPField_Inbox implements SPFieldInterface
 		if (!($this->enabled)) {
 			return false;
 		}
-		$lang = JFactory::getLanguage()->getlocale();
-		SPFactory::header()->addJsCode( "var RecaptchaOptions = {
-		    theme : '{$this->recaptcha_template}',
-		    lang : '{$lang[4]}'
-		 };" );
-		SPFactory::header()->addJsFile( 'jquery' );
-		SPFactory::header()->addJsCode( "jQuery( document ).ready( function() {
-			jQuery( '#recaptcha_response_field' )
-				.addClass( ' required' )
-			 	.css('border' , '')
-		});");
-		require_once(JPATH_COMPONENT.'/lib/recaptcha/recaptcha.php');
-		$captcha = recaptcha_get_html($this->public_key, null, $this->ssl);
+		if (!defined('SOBIPRO_ADM')) {
+			$lang = JFactory::getLanguage()->getlocale();
+			SPFactory::header()->addJsCode( "var RecaptchaOptions = {
+				theme : '{$this->recaptcha_template}',
+				lang : '{$lang[4]}'
+			 };" );
+			SPFactory::header()->addJsFile( 'jquery' );
+			SPFactory::header()->addJsCode( "jQuery( document ).ready( function() {
+				jQuery( '#recaptcha_response_field' )
+					.addClass( ' required' )
+					.css('border' , '')
+			});");
+			require_once(SOBI_PATH.'/lib/recaptcha/recaptcha.php');
+			$captcha = recaptcha_get_html($this->public_key, null, $this->ssl);
+		} else {
+			$captcha = "For Backend the reCaptcha is deactivated!";
+		}
 		if (!$return) {
 			echo $captcha;
 		}
@@ -95,20 +99,22 @@ class SPField_reCaptcha extends SPField_Inbox implements SPFieldInterface
 		 */
 		public function submit( &$entry, $tsid = null, $request = 'POST' )
 		{
-			SPLang::load( 'SpApp.recaptcha' );
-			$data = SPRequest::string( "recaptcha_response_field" , null, false, $request );
-			if ( !( strlen( $data ) ) ) {
-				throw new SPException( SPLang::e( 'SW_FIELD_REQUIRED_ERR', $this->name ) );
-			}
-			require_once(JPATH_COMPONENT.'/lib/recaptcha/recaptcha.php');
-			$resp = recaptcha_check_answer ($this->private_key,
-					SPRequest::string( "REMOTE_ADDR", null, false, 'SERVER' ),
-					SPRequest::string( "recaptcha_challenge_field" , null, false, $request ),
-					$data);
+			if (!defined('SOBIPRO_ADM')) {
+				SPLang::load( 'SpApp.recaptcha' );
+				$data = SPRequest::string( "recaptcha_response_field" , null, false, $request );
+				if ( !( strlen( $data ) ) ) {
+					throw new SPException( SPLang::e( 'SW_FIELD_REQUIRED_ERR', $this->name ) );
+				}
+				require_once(SOBI_PATH.'/lib/recaptcha/recaptcha.php');
+				$resp = recaptcha_check_answer ($this->private_key,
+						SPRequest::string( "REMOTE_ADDR", null, false, 'SERVER' ),
+						SPRequest::string( "recaptcha_challenge_field" , null, false, $request ),
+						$data);
 
-			if (!$resp->is_valid) {
-				// What happens when the CAPTCHA was entered incorrectly
-				throw new SPException( SPLang::e( 'SW_FIELD_RECAPTCHA_ERR', $resp->error ) );
+				if (!$resp->is_valid) {
+					// What happens when the CAPTCHA was entered incorrectly
+					throw new SPException( SPLang::e( 'SW_FIELD_RECAPTCHA_ERR', $resp->error ) );
+				}
 			}
 		}
 }
